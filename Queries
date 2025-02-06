@@ -1,0 +1,83 @@
+# Inventory Management System
+
+## Queries
+
+### Track Inventory Levels by Product
+```sql
+SELECT p.ProductName, i.QuantityInStock, i.LastUpdated
+FROM Products p
+JOIN Inventory i ON p.ProductID = i.ProductID;
+```
+
+### Generate Reorder Reports
+```sql
+SELECT p.ProductName, p.UnitsInStock, p.ReorderLevel
+FROM Products p
+WHERE p.UnitsInStock <= p.ReorderLevel;
+```
+
+### List Orders by Supplier
+```sql
+SELECT s.SupplierName, o.OrderID, o.OrderDate, p.ProductName, od.Quantity
+FROM Suppliers s
+JOIN Orders o ON s.SupplierID = o.SupplierID
+JOIN Order_Details od ON o.OrderID = od.OrderID
+JOIN Products p ON od.ProductID = p.ProductID
+ORDER BY s.SupplierName, o.OrderDate;
+```
+
+### Total Orders Placed by Each Supplier
+```sql
+SELECT s.SupplierName, COUNT(o.OrderID) AS TotalOrders
+FROM Suppliers s
+JOIN Orders o ON s.SupplierID = o.SupplierID
+GROUP BY s.SupplierName;
+```
+
+### Products Below Reorder Level
+```sql
+SELECT ProductName, UnitsInStock, ReorderLevel
+FROM Products
+WHERE UnitsInStock < ReorderLevel;
+```
+
+### Order Details for a Specific Order
+```sql
+SELECT o.OrderID, p.ProductName, od.Quantity, o.OrderDate
+FROM Orders o
+JOIN Order_Details od ON o.OrderID = od.OrderID
+JOIN Products p ON od.ProductID = p.ProductID
+WHERE o.OrderID = 1;
+```
+
+### Products Supplied by a Specific Supplier
+```sql
+SELECT p.ProductName
+FROM Products p
+JOIN Suppliers s ON p.SupplierID = s.SupplierID
+WHERE s.SupplierName = 'Supplier A';
+```
+
+### Total Quantity Ordered for Each Product
+```sql
+SELECT p.ProductName, SUM(od.Quantity) AS TotalQuantityOrdered
+FROM Products p
+JOIN Order_Details od ON p.ProductID = od.ProductID
+GROUP BY p.ProductName;
+```
+
+### Recent Inventory Updates
+```sql
+SELECT p.ProductName, i.QuantityInStock, i.LastUpdated
+FROM Inventory i
+JOIN Products p ON i.ProductID = p.ProductID
+ORDER BY i.LastUpdated DESC;
+```
+
+### Supplier Contact Information
+```sql
+SELECT SupplierName, ContactName, Phone
+FROM Suppliers;
+```
+
+
